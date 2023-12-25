@@ -1,5 +1,9 @@
 ﻿
 $(document).ready(function () {
+
+    $("#CEP").inputmask("mask", { "mask": "99999-999" });
+    $("#CPF").inputmask("mask", { "mask": "999.999.999-99" }, { reverse: true });
+
     $('#formCadastro').submit(function (e) {
         e.preventDefault();
         $.ajax({

@@ -1,5 +1,10 @@
 ﻿
 $(document).ready(function () {
+
+    //$("#CEP").inputmask("mask", { "mask": "99999-999" });
+    //$("#CPF").inputmask("mask", { "mask": "999.999.999-99" }, { reverse: true });
+    $('#formCadastro #CPF').inputmask("mask", { "mask": "999.999.999-99" }, { reverse: true });
+
     if (obj) {
         $('#formCadastro #Nome').val(obj.Nome);
         $('#formCadastro #CEP').val(obj.CEP);
