@@ -2,6 +2,7 @@
 
     $("#CEP").inputmask("mask", { "mask": "99999-999" });
     $("#CPF").inputmask("mask", { "mask": "999.999.999-99" }, { reverse: true });
+    $("#CPFBeneficiario").inputmask("mask", { "mask": "999.999.999-99" }, { reverse: true });
 
     if (obj) {
         $('#formCadastro #Nome').val(obj.Nome);
@@ -150,4 +151,17 @@ function Valida() {
     } else {
         return true;
     }
+}
+
+function adicionarAoGrid() {
+    
+    var valorCPFBeneficiario = $("#CPFBeneficiario").val();
+    var valorNomeBeneficiario = $("#NomeBeneficiario").val();
+    
+    var novaLinha = "<tr><td>" + valorCPFBeneficiario + "</td><td>" + valorNomeBeneficiario + "</td></tr>";
+
+    $("#gridBeneficiarios").append(novaLinha);
+
+    $("#CPFBeneficiario").val("");
+    $("#NomeBeneficiario").val("");
 }
