@@ -437,6 +437,7 @@
     <Content Include="Scripts\jtable\themes\basic\jtable_basic.less" />
     <Content Include="Views\Cliente\Alterar.cshtml" />
     <Content Include="Views\Cliente\Forms.cshtml" />
+    <Content Include="Views\Cliente\Beneficiarios.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FI.AtividadeEntrevista\FI.AtividadeEntrevista.csproj">
