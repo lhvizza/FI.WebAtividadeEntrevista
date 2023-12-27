@@ -29,21 +29,40 @@
             return;
         }
 
+        var dadosBeneficiarios = lerDadosBeneficiarios();
+
+        var nome = $(this).find("#Nome").val();
+        var cep = $(this).find("#CEP").val();
+        var cpf = cpf.value;
+        var email = $(this).find("#Email").val();
+        var sobrenome = $(this).find("#Sobrenome").val();
+        var nacionalidade = $(this).find("#Nacionalidade").val();
+        var estado = $(this).find("#Estado").val();
+        var cidade = $(this).find("#Cidade").val();
+        var logradouro = $(this).find("#Logradouro").val();
+        var telefone = $(this).find("#Telefone").val();
+
+        var json = JSON.stringify(
+        {
+            NOME: nome,
+            CEP: cep,
+            CPF: cpf,
+            Email: email,
+            sobrenome: sobrenome,
+            Nacionalidade: nacionalidade,
+            Estado: estado,
+            Cidade: cidade,
+            Logradouro: logradouro,
+            Telefone: telefone,
+            BeneficiarioList: dadosBeneficiarios
+        });
+
+
         $.ajax({
             url: urlPost,
             method: "POST",
-            data: {
-                "NOME": $(this).find("#Nome").val(),
-                "CEP": $(this).find("#CEP").val(),
-                "CPF": cpf.value,
-                "Email": $(this).find("#Email").val(),
-                "Sobrenome": $(this).find("#Sobrenome").val(),
-                "Nacionalidade": $(this).find("#Nacionalidade").val(),
-                "Estado": $(this).find("#Estado").val(),
-                "Cidade": $(this).find("#Cidade").val(),
-                "Logradouro": $(this).find("#Logradouro").val(),
-                "Telefone": $(this).find("#Telefone").val()
-            },
+            contentType: 'application/json',
+            data: json,
             error:
             function (r) {
                 if (r.status == 400)
@@ -245,4 +264,22 @@ function carregarDadosIniciais(beneficiariosList) {
         // Adicione a nova linha ao corpo da tabela
         $("#gridBeneficiarios tbody").append(novaLinha);
     }
+}
+
+function lerDadosBeneficiarios() {
+    var dadosBeneficiariosTemp = [];
+
+    $("#gridBeneficiarios tbody tr").each(function () {
+        var cpfBeneficiario = $(this).find("td:eq(0)").text();
+        var nomeBeneficiario = $(this).find("td:eq(1)").text();
+
+        dadosBeneficiariosTemp.push({
+            Id: 0,
+            CPF: cpfBeneficiario,
+            Nome: nomeBeneficiario,
+            IdCliente: obj.Id
+        });
+    });
+
+    return dadosBeneficiariosTemp;
 }

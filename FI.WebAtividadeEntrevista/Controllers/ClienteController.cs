@@ -100,7 +100,23 @@ namespace WebAtividadeEntrevista.Controllers
                     Sobrenome = model.Sobrenome,
                     Telefone = model.Telefone
                 });
-                               
+
+                BoBeneficiario be = new BoBeneficiario();
+                be.ExcluirBeneficiarios(model.Id);
+
+                if (model.BeneficiarioList != null)
+                {
+                    foreach (var beneficiario in model.BeneficiarioList)
+                    {
+                        be.IncluirBeneficiario(new Beneficiario()
+                        {
+                            CPF = beneficiario.CPF,
+                            Nome = beneficiario.Nome,
+                            IdCliente = model.Id
+                        });
+                    }
+                }
+
                 return Json("Cadastro alterado com sucesso");
             }
         }
@@ -136,7 +152,7 @@ namespace WebAtividadeEntrevista.Controllers
                 {
                     foreach (var beneficiario in beneficiarios)
                     {
-                        Models.BeneficiarioModel ben = new BeneficiarioModel { Id = beneficiario.Id, CPF = beneficiario.CPF, Nome = beneficiario.Nome, IdClient = beneficiario.IdCliente };
+                        Models.BeneficiarioModel ben = new BeneficiarioModel { Id = beneficiario.Id, CPF = beneficiario.CPF, Nome = beneficiario.Nome, IdCliente = beneficiario.IdCliente };
                         model.BeneficiarioList.Add(ben);
                     }
                 }

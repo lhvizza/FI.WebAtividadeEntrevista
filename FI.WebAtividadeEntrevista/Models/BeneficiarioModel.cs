@@ -25,6 +25,6 @@ namespace WebAtividadeEntrevista.Models
         [Required]
         public string Nome { get; set; }
 
-        public long IdClient { get; set; }
+        public long IdCliente { get; set; }
     }
 }
