@@ -2,44 +2,66 @@
 
     $("#CEP").inputmask("mask", { "mask": "99999-999" });
     $("#CPF").inputmask("mask", { "mask": "999.999.999-99" }, { reverse: true });
+    $("#CPFBeneficiario").inputmask("mask", { "mask": "999.999.999-99" }, { reverse: true });
 
     $('#formCadastro').submit(function (e) {
         e.preventDefault();
 
-        if (!Valida()) {
+        var cpf = document.getElementById("CPF");
+        if (!Valida(cpf)) {
             return;
         }
+
+        var dadosBeneficiarios = lerDadosBeneficiarios();
+
+        var nome = $(this).find("#Nome").val();
+        var cep = $(this).find("#CEP").val();
+        var cpf = cpf.value;
+        var email = $(this).find("#Email").val();
+        var sobrenome = $(this).find("#Sobrenome").val();
+        var nacionalidade = $(this).find("#Nacionalidade").val();
+        var estado = $(this).find("#Estado").val();
+        var cidade = $(this).find("#Cidade").val();
+        var logradouro = $(this).find("#Logradouro").val();
+        var telefone = $(this).find("#Telefone").val();
+
+        var json = JSON.stringify(
+            {
+                NOME: nome,
+                CEP: cep,
+                CPF: cpf,
+                Email: email,
+                sobrenome: sobrenome,
+                Nacionalidade: nacionalidade,
+                Estado: estado,
+                Cidade: cidade,
+                Logradouro: logradouro,
+                Telefone: telefone,
+                BeneficiarioList: dadosBeneficiarios
+            });
 
         $.ajax({
             url: urlPost,
             method: "POST",
-            data: {
-                "NOME": $(this).find("#Nome").val(),
-                "CEP": $(this).find("#CEP").val(),
-                "CPF": $(this).find("#CPF").val(),
-                "Email": $(this).find("#Email").val(),
-                "Sobrenome": $(this).find("#Sobrenome").val(),
-                "Nacionalidade": $(this).find("#Nacionalidade").val(),
-                "Estado": $(this).find("#Estado").val(),
-                "Cidade": $(this).find("#Cidade").val(),
-                "Logradouro": $(this).find("#Logradouro").val(),
-                "Telefone": $(this).find("#Telefone").val()
-            },
+            contentType: 'application/json',
+            data: json,
             error:
-            function (r) {
-                if (r.status == 400)
-                    ModalDialog("Ocorreu um erro", r.responseJSON);
-                else if (r.status == 500)
-                    ModalDialog("Ocorreu um erro", "Ocorreu um erro interno no servidor.");
-            },
+                function (r) {
+                    if (r.status == 400)
+                        ModalDialog("Ocorreu um erro", r.responseJSON);
+                    else if (r.status == 500)
+                        ModalDialog("Ocorreu um erro", "Ocorreu um erro interno no servidor.");
+                },
             success:
-            function (r) {
-                ModalDialog("Sucesso!", r)
-                $("#formCadastro")[0].reset();
-            }
+                function (r) {
+                    ModalDialog("Sucesso!", r)
+                    $("#formCadastro")[0].reset();
+                    $("#formBeneficiario")[0].reset();
+                    $("#gridBeneficiarios tbody").empty();
+                }
         });
     })
-    
+
 })
 
 function ModalDialog(titulo, texto) {
@@ -66,13 +88,12 @@ function ModalDialog(titulo, texto) {
     $('#' + random).modal('show');
 }
 
-function Valida() {
+function Valida(cpf) {
     var info = "";
     corErro = "#CCCCCC";
     corAcerto = "#FFFFFF";
 
     //Validação de CPF
-    var cpf = document.getElementById("CPF");
     strcpf = cpf.value;
     strcpf = strcpf.replace(".", "");
     strcpf = strcpf.replace(".", "");
@@ -90,12 +111,12 @@ function Valida() {
         } else {
             if (strcpf == "00000000000"
                 //|| strcpf == "11111111111"
-                || strcpf == "22222222222"
+                //|| strcpf == "22222222222"
                 || strcpf == "33333333333"
                 || strcpf == "44444444444"
                 || strcpf == "55555555555"
                 || strcpf == "66666666666"
-                || strcpf == "77777777777"
+                //|| strcpf == "77777777777"
                 //|| strcpf == "88888888888"
                 || strcpf == "99999999999") {
                 info += " - CPF inválido. \n";
@@ -136,4 +157,86 @@ function Valida() {
     } else {
         return true;
     }
+}
+
+function adicionarAoGrid() {
+    if ($("#formBeneficiario")[0].checkValidity()) {
+        var cpf = document.getElementById("CPFBeneficiario");
+
+        if (!existeCPFNoGrid(cpf.value)) {
+            if (!Valida(cpf)) {
+                return;
+            }
+
+            var valorCPFBeneficiario = $("#CPFBeneficiario").val();
+            var valorNomeBeneficiario = $("#NomeBeneficiario").val();
+
+            var novaLinha =
+                "<tr>" +
+                "<td>" + valorCPFBeneficiario + "</td>" +
+                "<td>" + valorNomeBeneficiario + "</td>" +
+                "<td><button type='button' class='btn btn-primary btn-sm' onclick='alterarLinha(this)'>Alterar</button></td>" +
+                "<td><button type='button' class='btn btn-primary btn-sm' onclick='excluirLinha(this)'>Excluir</button></td>" +
+                "</tr>";
+
+            $("#gridBeneficiarios tbody").append(novaLinha);
+
+            $("#CPFBeneficiario").val("");
+            $("#NomeBeneficiario").val("");
+        }
+        else {
+            alert("CPF já incluido como beneficiário nesse cliente.");
+        }
+    }
+    else {
+        alert("Preencha o CPF e o Nome do beneficiário antes de incluir.");
+    }
+}
+
+function existeCPFNoGrid(valor) {
+    var cpfExistentes = [];
+
+    // Itera sobre as linhas da tabela e verifica se o valor já existe
+    $("#gridBeneficiarios tbody tr").each(function () {
+        var cpfExistente = $(this).find("td:eq(0)").text(); ''
+        cpfExistentes.push(cpfExistente);
+    });
+
+    return cpfExistentes.includes(valor);
+}
+
+function alterarLinha(botao) {
+    // Obtenha a linha correspondente
+    var linha = $(botao).closest("tr");
+
+    var valorCPFBeneficiario = linha.find("td:eq(0)").text();
+    var valorNomeBeneficiario = linha.find("td:eq(1)").text();
+
+    $("#CPFBeneficiario").val(valorCPFBeneficiario);
+    $("#NomeBeneficiario").val(valorNomeBeneficiario);
+
+    linha.remove();
+}
+
+function excluirLinha(botao) {
+    // Obtenha a linha correspondente e remova-a
+    $(botao).closest("tr").remove();
+}
+
+function lerDadosBeneficiarios() {
+    var dadosBeneficiariosTemp = [];
+
+    $("#gridBeneficiarios tbody tr").each(function () {
+        var cpfBeneficiario = $(this).find("td:eq(0)").text();
+        var nomeBeneficiario = $(this).find("td:eq(1)").text();
+
+        dadosBeneficiariosTemp.push({
+            Id: 0,
+            CPF: cpfBeneficiario,
+            Nome: nomeBeneficiario,
+            IdCliente: 0
+        });
+    });
+
+    return dadosBeneficiariosTemp;
 }

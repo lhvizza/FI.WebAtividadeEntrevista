@@ -112,7 +112,6 @@ function Valida(cpf)
     corAcerto = "#FFFFFF";
 
     //Validação de CPF
-    //var cpf = document.getElementById("CPF");
     strcpf = cpf.value;
     strcpf = strcpf.replace(".", "");
     strcpf = strcpf.replace(".", "");
