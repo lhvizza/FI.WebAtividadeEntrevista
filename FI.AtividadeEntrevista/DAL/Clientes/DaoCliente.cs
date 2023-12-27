@@ -40,9 +40,9 @@ namespace FI.AtividadeEntrevista.DAL
         }
 
         /// <summary>
-        /// Inclui um novo cliente
+        /// Consultar um cliente
         /// </summary>
-        /// <param name="cliente">Objeto de cliente</param>
+        /// <param name="Id">Id do client</param>
         internal DML.Cliente Consultar(long Id)
         {
             List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>();
@@ -55,6 +55,12 @@ namespace FI.AtividadeEntrevista.DAL
             return cli.FirstOrDefault();
         }
 
+        /// <summary>
+        /// Verifica se já existe cliente cadastrado com esse CPF
+        /// </summary>
+        /// <param name="CPF">CPF do cliente</param>
+        /// <param name="Id">Id do cliente caso queira pesquisar cpf de um cliente especifico</param>
+        /// <returns></returns>
         internal bool VerificarExistencia(string CPF, long Id)
         {
             List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>();

@@ -73,5 +73,6 @@ namespace WebAtividadeEntrevista.Models
         /// </summary>
         public string Telefone { get; set; }
 
+        public List<BeneficiarioModel> BeneficiarioList { get; set; }
     }    
 }

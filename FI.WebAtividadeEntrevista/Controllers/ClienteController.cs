@@ -126,10 +126,20 @@ namespace WebAtividadeEntrevista.Controllers
                     Nacionalidade = cliente.Nacionalidade,
                     Nome = cliente.Nome,
                     Sobrenome = cliente.Sobrenome,
-                    Telefone = cliente.Telefone
+                    Telefone = cliente.Telefone,
+                    BeneficiarioList = new List<BeneficiarioModel>()
                 };
 
-            
+                BoBeneficiario be = new BoBeneficiario();
+                List<Beneficiario> beneficiarios = be.Consultar(id);
+                if (beneficiarios.Any())
+                {
+                    foreach (var beneficiario in beneficiarios)
+                    {
+                        Models.BeneficiarioModel ben = new BeneficiarioModel { Id = beneficiario.Id, CPF = beneficiario.CPF, Nome = beneficiario.Nome, IdClient = beneficiario.IdCliente };
+                        model.BeneficiarioList.Add(ben);
+                    }
+                }
             }
 
             return View(model);

@@ -15,6 +15,10 @@
         $('#formCadastro #Cidade').val(obj.Cidade);
         $('#formCadastro #Logradouro').val(obj.Logradouro);
         $('#formCadastro #Telefone').val(obj.Telefone);
+
+        if (obj.BeneficiarioList) {
+            carregarDadosIniciais(obj.BeneficiarioList);
+        }
     }
 
     $('#formCadastro').submit(function (e) {
@@ -174,18 +178,12 @@ function adicionarAoGrid()
                 "<tr>" +
                 "<td>" + valorCPFBeneficiario + "</td>" +
                 "<td>" + valorNomeBeneficiario + "</td>" +
-
-                // Botão para alterar
                 "<td><button type='button' class='btn btn-primary btn-sm' onclick='alterarLinha(this)'>Alterar</button></td>" +
-
-                // Botão para excluir
                 "<td><button type='button' class='btn btn-primary btn-sm' onclick='excluirLinha(this)'>Excluir</button></td>" +
                 "</tr>";
 
-            // Adicione a nova linha ao corpo da tabela
             $("#gridBeneficiarios tbody").append(novaLinha);
 
-            // Limpe os campos do formulário após adicionar ao grid
             $("#CPFBeneficiario").val("");
             $("#NomeBeneficiario").val("");
         }
@@ -230,4 +228,21 @@ function existeCPFNoGrid(valor)
     });
 
     return cpfExistentes.includes(valor);
+}
+
+// Função para carregar dados no grid
+function carregarDadosIniciais(beneficiariosList) {
+    for (var i = 0; i < beneficiariosList.length; i++) {
+
+        var novaLinha =
+            "<tr>" +
+            "<td>" + beneficiariosList[i].CPF + "</td>" +
+            "<td>" + beneficiariosList[i].Nome + "</td>" +
+            "<td><button type='button' class='btn btn-primary btn-sm' onclick='alterarLinha(this)'>Alterar</button></td>" +
+            "<td><button type='button' class='btn btn-primary btn-sm' onclick='excluirLinha(this)'>Excluir</button></td>" +
+            "</tr>";
+
+        // Adicione a nova linha ao corpo da tabela
+        $("#gridBeneficiarios tbody").append(novaLinha);
+    }
 }
