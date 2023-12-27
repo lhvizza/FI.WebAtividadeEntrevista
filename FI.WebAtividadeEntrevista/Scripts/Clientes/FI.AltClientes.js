@@ -20,7 +20,8 @@
     $('#formCadastro').submit(function (e) {
         e.preventDefault();
 
-        if (!Valida()) {
+        var cpf = document.getElementById("CPF");
+        if (!Valida(cpf)) {
             return;
         }
 
@@ -30,7 +31,7 @@
             data: {
                 "NOME": $(this).find("#Nome").val(),
                 "CEP": $(this).find("#CEP").val(),
-                "CPF": $(this).find("#CPF").val(),
+                "CPF": cpf.value,
                 "Email": $(this).find("#Email").val(),
                 "Sobrenome": $(this).find("#Sobrenome").val(),
                 "Nacionalidade": $(this).find("#Nacionalidade").val(),
@@ -81,13 +82,14 @@ function ModalDialog(titulo, texto) {
     $('#' + random).modal('show');
 }
 
-function Valida() {
+function Valida(cpf)
+{
     var info = "";
     corErro = "#CCCCCC";
     corAcerto = "#FFFFFF";
 
     //Validação de CPF
-    var cpf = document.getElementById("CPF");
+    //var cpf = document.getElementById("CPF");
     strcpf = cpf.value;
     strcpf = strcpf.replace(".", "");
     strcpf = strcpf.replace(".", "");
@@ -153,15 +155,79 @@ function Valida() {
     }
 }
 
-function adicionarAoGrid() {
-    
-    var valorCPFBeneficiario = $("#CPFBeneficiario").val();
-    var valorNomeBeneficiario = $("#NomeBeneficiario").val();
-    
-    var novaLinha = "<tr><td>" + valorCPFBeneficiario + "</td><td>" + valorNomeBeneficiario + "</td></tr>";
+function adicionarAoGrid()
+{
+    if ($("#formBeneficiario")[0].checkValidity())
+    {
+        var cpf = document.getElementById("CPFBeneficiario");
 
-    $("#gridBeneficiarios").append(novaLinha);
+        if (!existeCPFNoGrid(cpf.value))
+        {
+            if (!Valida(cpf)) {
+                return;
+            }
 
-    $("#CPFBeneficiario").val("");
-    $("#NomeBeneficiario").val("");
+            var valorCPFBeneficiario = $("#CPFBeneficiario").val();
+            var valorNomeBeneficiario = $("#NomeBeneficiario").val();
+
+            var novaLinha =
+                "<tr>" +
+                "<td>" + valorCPFBeneficiario + "</td>" +
+                "<td>" + valorNomeBeneficiario + "</td>" +
+
+                // Botão para alterar
+                "<td><button type='button' class='btn btn-primary btn-sm' onclick='alterarLinha(this)'>Alterar</button></td>" +
+
+                // Botão para excluir
+                "<td><button type='button' class='btn btn-primary btn-sm' onclick='excluirLinha(this)'>Excluir</button></td>" +
+                "</tr>";
+
+            // Adicione a nova linha ao corpo da tabela
+            $("#gridBeneficiarios tbody").append(novaLinha);
+
+            // Limpe os campos do formulário após adicionar ao grid
+            $("#CPFBeneficiario").val("");
+            $("#NomeBeneficiario").val("");
+        }
+        else
+        {
+            alert("CPF já incluido como beneficiário nesse cliente.");
+        }
+    }
+    else 
+    {
+        alert("Preencha o CPF e o Nome do beneficiário antes de incluir.");
+    }
+}
+
+function alterarLinha(botao)
+{
+    // Obtenha a linha correspondente
+    var linha = $(botao).closest("tr");
+
+    var valorCPFBeneficiario = linha.find("td:eq(0)").text();
+    var valorNomeBeneficiario = linha.find("td:eq(1)").text();
+
+    $("#CPFBeneficiario").val(valorCPFBeneficiario);
+    $("#NomeBeneficiario").val(valorNomeBeneficiario);
+
+    linha.remove();
+}
+
+function excluirLinha(botao) {
+    // Obtenha a linha correspondente e remova-a
+    $(botao).closest("tr").remove();
+}
+
+function existeCPFNoGrid(valor)
+{
+    var cpfExistentes = [];
+
+    // Itera sobre as linhas da tabela e verifica se o valor já existe
+    $("#gridBeneficiarios tbody tr").each(function () {
+        var cpfExistente = $(this).find("td:eq(0)").text();''
+        cpfExistentes.push(cpfExistente);
+    });
+
+    return cpfExistentes.includes(valor);
 }

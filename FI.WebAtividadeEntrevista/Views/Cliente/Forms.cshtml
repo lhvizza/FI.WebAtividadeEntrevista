@@ -80,7 +80,7 @@
     <div class="row">
         <div class="col-md-2">
             <div class="form-group">
-                <button type="button" class="form-control" data-toggle="modal" data-target="#modalBeneficiarios">Beneficiarioss</button>
+                <button type="button" class="form-control" data-toggle="modal" data-target="#modalBeneficiarios">Beneficiarios</button>
             </div>
         </div>
     </div>
@@ -101,30 +101,31 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalBeneficiariosLabel">Beneficiarios</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
-                    <span aria-hidden="true">&times;</span>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                    <span class="sr-only">Close</span>
                 </button>
+                <h4 class="modal-title" id="modalBeneficiariosLabel">Beneficiarios</h4>
+                @*<h4 class="modal-title">Modal title</h4>*@
             </div>
 
             <div class="modal-body">
                 <form id="formBeneficiario">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label for="CPFBeneficiario">CPF:</label>
-                                <input required="required" type="text" class="form-control" id="CPFBeneficiario" name="CPFBeneficiario" placeholder="Ex.: 010.011.111-00" maxlength="14">
+                                <input type="text" class="form-control" id="CPFBeneficiario" name="CPFBeneficiario" placeholder="Ex.: 010.011.111-00" maxlength="14" required>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label for="NomeBeneficiario">Nome:</label>
-                                <input required="required" type="text" class="form-control" id="NomeBeneficiario" name="NomeBeneficiario" placeholder="Ex.: João da silva" maxlength="50">
+                                <input type="text" class="form-control" id="NomeBeneficiario" name="NomeBeneficiario" placeholder="Ex.: João da silva" maxlength="50" required>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="pull-right">
-                                <label />
                                 <button type="button" class="btn btn-sm btn-success" onclick="adicionarAoGrid()">Incluir</button>
                             </div>
                         </div>
@@ -136,6 +137,8 @@
                         <tr>
                             <th>CPF</th>
                             <th>Nome</th>
+                            <th></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
